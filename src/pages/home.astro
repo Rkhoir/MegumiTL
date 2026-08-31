@@ -1,0 +1,56 @@
+---
+import "../../main.css";
+import Navbar from "../layouts/navbar.jsx";
+import Main from "../layouts/main.jsx";
+import { createClient } from "@supabase/supabase-js";
+import Aside from "../layouts/aside.jsx";   
+import Footer from "../layouts/footer.jsx";
+
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const games = async () => {
+  const { data, error } = await supabase.from("data_file_download").select("*");
+  if (error) {
+    console.error("Error fetching popular games:", error);
+    return [];
+  }
+  return data;
+};
+
+const gameList = (await games()) ?? [];
+const fallbackGames = [
+  { id: 1, name: "Lewd Avatar Simulator 3D", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80", genre: "3D, Android, Chinese, English" },
+  { id: 2, name: "Nine Lives of Yoki", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Action" },
+  { id: 3, name: "Daisy Mae Happy Animal Farm", image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Cute" },
+  { id: 4, name: "Mansion Days", image: "https://images.unsplash.com/photo-1587654780291-39c8e7a6fdd2?auto=format&fit=crop&w=900&q=80", genre: "Android, Chinese, English, Games" },
+  { id: 5, name: "Love Android Workshop", image: "https://images.unsplash.com/photo-1508385082359-f38ae991e8f2?auto=format&fit=crop&w=900&q=80", genre: "Android, English, Visual Novel" },
+  { id: 6, name: "Dreamy Girls", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80", genre: "Simulation, Romance, 3D" }
+];
+const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fallbackGames;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="{Astro.generator}" />
+    <title>MegumiTL</title>
+</head>
+<body class="site-shell">
+    <Navbar client:load />
+
+    <div class="page-shell">
+        <div class="content-layout">
+            <div class="catalog-panel">
+                <h2 class="mb-4">Android Games</h2>
+                <Main games={displayGames} />
+            </div>
+            <Aside />
+        </div>
+    </div>
+    <Footer />
+</body>
+</html>

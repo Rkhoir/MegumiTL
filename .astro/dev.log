@@ -1,0 +1,49 @@
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Generated 1ms","label":"types","level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Re-optimizing dependencies because vite config has changed","label":"vite","level":"info"}
+{"message":" astro  v7.2.4 ready in 2926 ms\n┃ Local    http://localhost:4321/\n┃ Network  http://192.168.42.46:4321/","label":"SKIP_FORMAT","level":"info"}
+{"message":"watching for file changes...","label":null,"level":"info"}
+{"message":"[optimizer] bundling dependencies...","label":"vite","level":"info"}
+Invalid DOM property `class`. Did you mean `className`?
+{"message":"[200] /home 1269ms","label":null,"level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 5248ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 1206ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 751ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 976ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 4199ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 692ms","label":null,"level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css, /src/layouts/navbar.jsx","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 1122ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 855ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 895ms","label":null,"level":"info"}
+{"message":"[200] /home 3605ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+{"message":"[200] /home 822ms","label":null,"level":"info"}
+{"message":"[200] /home 3166ms","label":null,"level":"info"}
+{"message":"[200] /home 850ms","label":null,"level":"info"}
