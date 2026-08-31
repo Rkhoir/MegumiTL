@@ -39,13 +39,13 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
     <meta name="generator" content="{Astro.generator}" />
     <title>MegumiTL</title>
 </head>
-<body class="site-shell">
+<body class="m-0 min-h-screen text-[#f4f4f5] bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] bg-[#08090d]">
     <Navbar client:load />
 
-    <div class="page-shell">
-        <div class="content-layout">
-            <div class="catalog-panel">
-                <h2 class="mb-4">Android Games</h2>
+    <div class="w-full mt-7 mx-auto pb-10 flex justify-center">
+        <div class="grid grid-cols-[minmax(0,1.8fr)_300px] max-[980px]:grid-cols-1 gap-6 items-start w-[min(1180px,calc(100%-36px))] mx-auto">
+            <div class="min-w-0 pr-0 min-[1100px]:pr-4">
+                <h2 class="mt-0 mb-[18px] text-[clamp(2.4rem,2.8vw,4rem)] text-[#f5f5f5] font-extrabold tracking-[-0.06em] leading-[0.95]">Android Games</h2>
                 <Main games={displayGames} />
             </div>
             <Aside />
