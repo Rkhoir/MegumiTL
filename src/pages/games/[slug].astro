@@ -1,0 +1,147 @@
+---
+export const prerender = true;
+
+import '../../../main.css';
+import { createClient } from "@supabase/supabase-js";
+import Navbar from "../../layouts/navbar.jsx";
+import Footer from "../../layouts/footer.jsx";
+import Aside from "../../layouts/aside.jsx";
+
+export async function getStaticPaths() {
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Missing Supabase environment variables: PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_KEY must be set");
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  try {
+    const { data, error } = await supabase
+      .from("data_file_download")
+      .select("id, name, size, page, link, image, rating, genre");
+
+    if (error || !data) {
+      console.error("Error fetching games for static paths:", error);
+      return [];
+    }
+
+    return data.map((game) => ({
+      params: { slug: game.id },
+      props: { game },
+    }));
+  } catch (err) {
+    console.error("Failed to fetch static paths:", err);
+    return [];
+  }
+}
+
+const { game } = Astro.props;
+
+const thumbnail = Array.isArray(game.image)
+  ? game.image[0]?.img || "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80"
+  : "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80";
+
+const genreList = Array.isArray(game.genre) && game.genre.length
+  ? game.genre
+  : ["Adventure"];
+
+const ratingText = typeof game.rating === "number" ? game.rating.toFixed(1) : null;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{game.name} — MegumiTL</title>
+</head>
+<body class="m-0 min-h-screen text-[#f4f4f5] bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] bg-[#08090d] flex flex-col justify-between">
+    <Navbar client:load />
+  <main class="w-full max-w-[1180px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <a href="/home" class="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-pink-400 transition-colors">
+      <span aria-hidden="true">&#8592;</span>
+      Back to games
+    </a>
+
+    <section class="relative mt-5 overflow-hidden rounded-2xl border border-white/10 bg-[#10131c] shadow-2xl shadow-black/30">
+      <div class="absolute inset-0 opacity-20">
+        <img src={thumbnail} alt="" class="h-full w-full object-cover blur-2xl scale-110" aria-hidden="true" />
+      </div>
+      <div class="absolute inset-0 bg-gradient-to-r from-[#10131c] via-[#10131c]/95 to-[#10131c]/60"></div>
+
+      <div class="relative grid gap-8 p-5 sm:p-8 lg:grid-cols-[280px_1fr] lg:items-center lg:p-10">
+        <img src={thumbnail} alt={game.name} class="aspect-[4/5] w-full rounded-xl border border-white/15 object-cover shadow-xl shadow-black/40" />
+
+        <div class="min-w-0">
+          <div class="flex flex-wrap gap-2">
+                        {genreList.map((g: string) => (
+              <span class="rounded-full border border-pink-400/25 bg-pink-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-pink-300">
+                {g}
+              </span>
+            ))}
+          </div>
+          <h1 class="mt-4 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">{game.name}</h1>
+          <p class="mt-4 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
+            Discover details, compatibility information, and the latest download link for this game.
+          </p>
+
+          <div class="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Rating</p>
+              <p class="mt-1 text-lg font-bold text-amber-300">{ratingText ? `${ratingText} / 5` : "N/A"}</p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Size</p>
+              <p class="mt-1 truncate text-lg font-bold text-white">{game.size || "Unknown"}</p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Platform</p>
+              <p class="mt-1 truncate text-lg font-bold text-white">{game.page || "Android"}</p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
+              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Genres</p>
+              <p class="mt-1 text-lg font-bold text-white">{genreList.length}</p>
+            </div>
+          </div>
+
+          <a href={game.link} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-lg bg-pink-600 px-7 py-3.5 text-sm font-extrabold uppercase tracking-wider text-white shadow-lg shadow-pink-950/40 transition hover:bg-pink-500 sm:w-auto">
+            Download game
+            <span aria-hidden="true">&#8599;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_300px]">
+      <section class="rounded-2xl border border-white/10 bg-[#10131c] p-5 sm:p-7">
+        <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <h2 class="text-lg font-bold text-white sm:text-xl">Game information</h2>
+          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-500">MegumiTL archive</span>
+        </div>
+        <dl class="grid gap-x-8 sm:grid-cols-2">
+          <div class="border-b border-white/10 py-4">
+            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Title</dt>
+            <dd class="mt-1 break-words text-sm font-medium text-zinc-200">{game.name}</dd>
+          </div>
+          <div class="border-b border-white/10 py-4">
+            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Source</dt>
+            <dd class="mt-1 break-words text-sm font-medium text-zinc-200">{game.page || "Not specified"}</dd>
+          </div>
+          <div class="py-4 sm:border-b sm:border-white/10">
+            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Categories</dt>
+            <dd class="mt-1 break-words text-sm font-medium text-zinc-200">{genreList.join(", ")}</dd>
+          </div>
+          <div class="py-4">
+            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Download status</dt>
+            <dd class="mt-1 flex items-center gap-2 text-sm font-medium text-emerald-300"><span class="h-2 w-2 rounded-full bg-emerald-400"></span>Available</dd>
+          </div>
+        </dl>
+      </section>
+      <Aside />
+    </div>
+    </main>
+    <Footer />
+</body>
+</html>

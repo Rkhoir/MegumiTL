@@ -21,7 +21,7 @@ export default function Main(props) {
 
                 return (
                     <Card 
-                        key={game.id ?? index} 
+                        id={game.id ?? index} 
                         title={title} 
                         image={thumbnail} 
                         rating={game.rating} 
