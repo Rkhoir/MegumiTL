@@ -14,9 +14,9 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-black border-b border-zinc-800 text-white shadow-md">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090a0f]/90 text-white shadow-[0_8px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+        <div className="flex h-[4.5rem] items-center justify-between gap-4">
           
           {/* Logo & Brand (Hitam & Teks Pink) */}
           <a href="/home" className="flex items-center gap-3 shrink-0 group" aria-label="Android Archives home">
@@ -35,11 +35,11 @@ export default function Navbar() {
                 type="text"
                 placeholder="Type here..."
                 aria-label="Search games"
-                className="w-full bg-zinc-900 text-zinc-100 placeholder-zinc-500 text-sm rounded-full pl-4 pr-24 py-2 border border-zinc-800 focus:outline-none focus:border-pink-500 transition-all"
+                className="w-full rounded-full border border-white/10 bg-white/[0.06] py-2.5 pl-4 pr-24 text-sm text-zinc-100 placeholder-zinc-500 transition-all focus:border-pink-400 focus:outline-none"
               />
               <button
                 type="button"
-                className="absolute right-1 top-1 bottom-1 px-4 bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold rounded-full transition-colors"
+                className="absolute bottom-1 right-1 top-1 rounded-full bg-pink-500 px-4 text-xs font-semibold text-white transition-colors hover:bg-pink-400"
               >
                 Search
               </button>
@@ -54,8 +54,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   link.active
-                    ? "bg-pink-500/15 text-pink-400 border border-pink-500/30"
-                    : "text-zinc-300 hover:text-pink-400 hover:bg-zinc-900"
+                    ? "border border-pink-400/25 bg-pink-400/10 text-pink-300"
+                    : "text-zinc-300 hover:bg-white/[0.06] hover:text-pink-300"
                 }`}
               >
                 {link.name}

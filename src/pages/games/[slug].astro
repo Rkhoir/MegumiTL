@@ -5,7 +5,6 @@ import '../../../main.css';
 import { createClient } from "@supabase/supabase-js";
 import Navbar from "../../layouts/navbar.jsx";
 import Footer from "../../layouts/footer.jsx";
-import Aside from "../../layouts/aside.jsx";
 
 export async function getStaticPaths() {
   const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
@@ -57,90 +56,39 @@ const ratingText = typeof game.rating === "number" ? game.rating.toFixed(1) : nu
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{game.name} — MegumiTL</title>
 </head>
-<body class="m-0 min-h-screen text-[#f4f4f5] bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] bg-[#08090d] flex flex-col justify-between">
+<body class="m-0 flex min-h-screen flex-col justify-between bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] text-[#f4f4f5]">
     <Navbar client:load />
-  <main class="w-full max-w-[1180px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
-    <a href="/home" class="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-pink-400 transition-colors">
+  <main class="mx-auto w-full max-w-[1180px] px-4 py-8 sm:px-6 sm:py-12">
+    <a href="/home" class="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-pink-300">
       <span aria-hidden="true">&#8592;</span>
       Back to games
     </a>
 
-    <section class="relative mt-5 overflow-hidden rounded-2xl border border-white/10 bg-[#10131c] shadow-2xl shadow-black/30">
-      <div class="absolute inset-0 opacity-20">
-        <img src={thumbnail} alt="" class="h-full w-full object-cover blur-2xl scale-110" aria-hidden="true" />
-      </div>
-      <div class="absolute inset-0 bg-gradient-to-r from-[#10131c] via-[#10131c]/95 to-[#10131c]/60"></div>
+      <div class="mt-6 grid gap-8 overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.045] p-3 shadow-[0_20px_60px_rgba(0,0,0,0.28)] lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)] lg:p-5">
+        <div class="relative min-h-[280px] overflow-hidden rounded-[18px] bg-zinc-900 lg:min-h-[460px]">
+          <img src={thumbnail} alt={game.name} class="absolute inset-0 h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5">
+            <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-pink-300">Game details</p>
+            <h1 class="text-3xl font-extrabold leading-tight tracking-[-0.04em] text-white sm:text-4xl">{game.name}</h1>
+          </div>
+        </div>
 
-      <div class="relative grid gap-8 p-5 sm:p-8 lg:grid-cols-[280px_1fr] lg:items-center lg:p-10">
-        <img src={thumbnail} alt={game.name} class="aspect-[4/5] w-full rounded-xl border border-white/15 object-cover shadow-xl shadow-black/40" />
-
-        <div class="min-w-0">
+        <div class="flex flex-col justify-center px-3 py-5 lg:px-6">
           <div class="flex flex-wrap gap-2">
-                        {genreList.map((g: string) => (
-              <span class="rounded-full border border-pink-400/25 bg-pink-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-pink-300">
-                {g}
-              </span>
-            ))}
+            {genreList.map((genre: string) => <span class="rounded-md border border-pink-300/15 bg-pink-300/[0.07] px-2.5 py-1 text-xs font-semibold text-pink-100/80">{genre}</span>)}
           </div>
-          <h1 class="mt-4 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">{game.name}</h1>
-          <p class="mt-4 max-w-2xl text-sm leading-6 text-zinc-400 sm:text-base">
-            Discover details, compatibility information, and the latest download link for this game.
-          </p>
-
-          <div class="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Rating</p>
-              <p class="mt-1 text-lg font-bold text-amber-300">{ratingText ? `${ratingText} / 5` : "N/A"}</p>
-            </div>
-            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Size</p>
-              <p class="mt-1 truncate text-lg font-bold text-white">{game.size || "Unknown"}</p>
-            </div>
-            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Platform</p>
-              <p class="mt-1 truncate text-lg font-bold text-white">{game.page || "Android"}</p>
-            </div>
-            <div class="rounded-lg border border-white/10 bg-black/20 p-3">
-              <p class="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Genres</p>
-              <p class="mt-1 text-lg font-bold text-white">{genreList.length}</p>
-            </div>
+          <dl class="mt-7 grid grid-cols-2 gap-4 border-y border-white/10 py-5">
+            <div><dt class="text-xs uppercase tracking-wider text-zinc-500">Size</dt><dd class="mt-1 font-semibold text-zinc-100">{game.size || "Unknown"}</dd></div>
+            {ratingText && <div><dt class="text-xs uppercase tracking-wider text-zinc-500">Rating</dt><dd class="mt-1 font-semibold text-zinc-100">★ {ratingText} / 5</dd></div>}
+          </dl>
+          <p class="mt-6 text-sm leading-6 text-zinc-400">Ready to play? Choose your platform and start the download.</p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <a href={game.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-pink-500 px-5 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-pink-950/40 transition hover:bg-pink-400">Windows <span aria-hidden="true">↗</span></a>
+            <a href={game.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3.5 text-sm font-extrabold text-white transition hover:border-pink-300/40 hover:bg-pink-300/10">Android <span aria-hidden="true">↗</span></a>
           </div>
-
-          <a href={game.link} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-lg bg-pink-600 px-7 py-3.5 text-sm font-extrabold uppercase tracking-wider text-white shadow-lg shadow-pink-950/40 transition hover:bg-pink-500 sm:w-auto">
-            Download game
-            <span aria-hidden="true">&#8599;</span>
-          </a>
         </div>
       </div>
-    </section>
-
-    <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_300px]">
-      <section class="rounded-2xl border border-white/10 bg-[#10131c] p-5 sm:p-7">
-        <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
-          <h2 class="text-lg font-bold text-white sm:text-xl">Game information</h2>
-          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-500">MegumiTL archive</span>
-        </div>
-        <dl class="grid gap-x-8 sm:grid-cols-2">
-          <div class="border-b border-white/10 py-4">
-            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Title</dt>
-            <dd class="mt-1 break-words text-sm font-medium text-zinc-200">{game.name}</dd>
-          </div>
-          <div class="border-b border-white/10 py-4">
-            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Source</dt>
-            <dd class="mt-1 break-words text-sm font-medium text-zinc-200">{game.page || "Not specified"}</dd>
-          </div>
-          <div class="py-4 sm:border-b sm:border-white/10">
-            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Categories</dt>
-            <dd class="mt-1 break-words text-sm font-medium text-zinc-200">{genreList.join(", ")}</dd>
-          </div>
-          <div class="py-4">
-            <dt class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Download status</dt>
-            <dd class="mt-1 flex items-center gap-2 text-sm font-medium text-emerald-300"><span class="h-2 w-2 rounded-full bg-emerald-400"></span>Available</dd>
-          </div>
-        </dl>
-      </section>
-      <Aside />
-    </div>
     </main>
     <Footer />
 </body>
