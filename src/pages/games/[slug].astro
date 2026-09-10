@@ -18,18 +18,28 @@ export async function getStaticPaths() {
 
   try {
     const { data, error } = await supabase
-      .from("data_file_download")
-      .select("id, name, size, page, link, image, rating, genre");
+      .from("Game")
+      .select("id, title, thumbnail, link_for_android, link_for_windows, size_for_android, size_for_windows, images, genre");
 
     if (error || !data) {
       console.error("Error fetching games for static paths:", error);
       return [];
     }
 
-    return data.map((game) => ({
-      params: { slug: game.id },
-      props: { game },
-    }));
+    return data.flatMap((game) => {
+      const paths = [];
+      const props = { game };
+
+      if (game.id !== null && game.id !== undefined) {
+        paths.push({ params: { slug: String(game.id) }, props });
+      }
+
+      if (game.title) {
+        paths.push({ params: { slug: String(game.title) }, props });
+      }
+
+      return paths;
+    });
   } catch (err) {
     console.error("Failed to fetch static paths:", err);
     return [];
@@ -38,15 +48,28 @@ export async function getStaticPaths() {
 
 const { game } = Astro.props;
 
-const thumbnail = Array.isArray(game.image)
-  ? game.image[0]?.img || "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80"
-  : "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80";
+const fallbackThumbnail = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=85";
+const thumbnail = game.thumbnail || fallbackThumbnail;
 
-const genreList = Array.isArray(game.genre) && game.genre.length
-  ? game.genre
-  : ["Adventure"];
+const parseList = (value: unknown) => {
+  if (Array.isArray(value)) return value.filter(Boolean).map(String);
+  if (!value) return [];
 
-const ratingText = typeof game.rating === "number" ? game.rating.toFixed(1) : null;
+  try {
+    const parsed = JSON.parse(String(value));
+    return Array.isArray(parsed) ? parsed.filter(Boolean).map(String) : [String(value)];
+  } catch {
+    return String(value).split(",").map((item) => item.trim()).filter(Boolean);
+  }
+};
+
+const genreList = parseList(game.genre);
+const imageList = [...new Set([thumbnail, ...parseList(game.images)])];
+const androidLink = game.link_for_android;
+const windowsLink = game.link_for_windows;
+const downloadLink = androidLink || windowsLink;
+const downloadSize = game.size_for_android || game.size_for_windows || "Not listed";
+
 ---
 
 <!DOCTYPE html>
@@ -54,42 +77,131 @@ const ratingText = typeof game.rating === "number" ? game.rating.toFixed(1) : nu
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{game.name} — MegumiTL</title>
+    <title>{game.title} — MegumiTL</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
 </head>
 <body class="m-0 flex min-h-screen flex-col justify-between bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] text-[#f4f4f5]">
     <Navbar client:load />
-  <main class="mx-auto w-full max-w-[1180px] px-4 py-8 sm:px-6 sm:py-12">
-    <a href="/home" class="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-pink-300">
-      <span aria-hidden="true">&#8592;</span>
-      Back to games
+  <main class="mx-auto w-full max-w-[1220px] px-4 py-8 sm:px-6 sm:py-12">
+    <a href="/home" class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-pink-300">
+      <span aria-hidden="true">&#8592;</span> Back to games
     </a>
 
-      <div class="mt-6 grid gap-8 overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.045] p-3 shadow-[0_20px_60px_rgba(0,0,0,0.28)] lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)] lg:p-5">
-        <div class="relative min-h-[280px] overflow-hidden rounded-[18px] bg-zinc-900 lg:min-h-[460px]">
-          <img src={thumbnail} alt={game.name} class="absolute inset-0 h-full w-full object-cover" />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
-          <div class="absolute bottom-5 left-5 right-5">
-            <p class="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-pink-300">Game details</p>
-            <h1 class="text-3xl font-extrabold leading-tight tracking-[-0.04em] text-white sm:text-4xl">{game.name}</h1>
+    <section class="overflow-hidden rounded-[26px] border border-white/10 bg-[#101119] shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
+      <div class="grid lg:grid-cols-[minmax(0,1.3fr)_minmax(340px,0.7fr)]">
+        <div class="border-b border-white/10 p-3 sm:p-5 lg:border-b-0 lg:border-r">
+          <div class="relative aspect-[16/10] overflow-hidden rounded-[19px] bg-zinc-900" data-carousel>
+            {imageList.map((image, index) => (
+              <img src={image} alt={`${game.title} screenshot ${index + 1}`} class:list={["absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700", { "opacity-100": index === 0 }]} loading={index === 0 ? "eager" : "lazy"} />
+            ))}
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent"></div>
+            <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4">
+              <div>
+                <p class="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.24em] text-pink-300">Game details</p>
+                <h1 class="max-w-2xl text-3xl font-extrabold leading-tight tracking-[-0.04em] text-white sm:text-5xl">{game.title}</h1>
+              </div>
+              <span class="shrink-0 rounded-full border border-white/15 bg-black/35 px-3 py-1.5 text-xs font-semibold text-zinc-200 backdrop-blur" data-slide-count>1 / {imageList.length}</span>
+            </div>
+            {imageList.length > 1 && (
+              <div class="absolute left-5 right-5 top-5 flex justify-between">
+                <button type="button" class="grid h-9 w-9 place-items-center rounded-[10px] border border-white/20 bg-black/50 text-white backdrop-blur transition hover:border-pink-400/70 hover:bg-pink-600/60" data-carousel-prev aria-label="Previous image">&#8592;</button>
+                <button type="button" class="grid h-9 w-9 place-items-center rounded-[10px] border border-white/20 bg-black/50 text-white backdrop-blur transition hover:border-pink-400/70 hover:bg-pink-600/60" data-carousel-next aria-label="Next image">&#8594;</button>
+              </div>
+            )}
           </div>
+          {imageList.length > 1 && (
+            <div class="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6" data-carousel-thumbs>
+              {imageList.map((image, index) => (
+                <button type="button" class:list={["aspect-[16/10] overflow-hidden rounded-[10px] border border-white/10 opacity-50 transition hover:border-pink-400/80 hover:opacity-100", { "border-pink-400/80 opacity-100": index === 0 }]} data-slide-to={index} aria-label={`Show image ${index + 1}`}>
+                  <img src={image} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div class="flex flex-col justify-center px-3 py-5 lg:px-6">
-          <div class="flex flex-wrap gap-2">
-            {genreList.map((genre: string) => <span class="rounded-md border border-pink-300/15 bg-pink-300/[0.07] px-2.5 py-1 text-xs font-semibold text-pink-100/80">{genre}</span>)}
+        <div class="flex flex-col justify-between p-6 sm:p-8">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Game download</p>
+            <div class="mt-4 grid gap-3">
+              <a href={downloadLink || undefined} target="_blank" rel="noopener noreferrer" class:list={["flex items-center justify-between gap-4 rounded-[14px] border border-pink-400/40 bg-pink-500/15 px-4 py-4 text-white transition hover:-translate-y-0.5 hover:border-pink-400/70 hover:bg-pink-500/25", { "pointer-events-none cursor-not-allowed opacity-45": !downloadLink }]} aria-disabled={!downloadLink}>
+                <span><strong class="block">Download</strong><small class="mt-1 block text-xs text-zinc-400">{downloadSize}</small></span><span aria-hidden="true">&#8599;</span>
+              </a>
+            </div>
           </div>
-          <dl class="mt-7 grid grid-cols-2 gap-4 border-y border-white/10 py-5">
-            <div><dt class="text-xs uppercase tracking-wider text-zinc-500">Size</dt><dd class="mt-1 font-semibold text-zinc-100">{game.size || "Unknown"}</dd></div>
-            {ratingText && <div><dt class="text-xs uppercase tracking-wider text-zinc-500">Rating</dt><dd class="mt-1 font-semibold text-zinc-100">★ {ratingText} / 5</dd></div>}
-          </dl>
-          <p class="mt-6 text-sm leading-6 text-zinc-400">Ready to play? Choose your platform and start the download.</p>
-          <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            <a href={game.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-pink-500 px-5 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-pink-950/40 transition hover:bg-pink-400">Windows <span aria-hidden="true">↗</span></a>
-            <a href={game.link} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 py-3.5 text-sm font-extrabold text-white transition hover:border-pink-300/40 hover:bg-pink-300/10">Android <span aria-hidden="true">↗</span></a>
+          <div class="mt-8 border-t border-white/10 pt-6">
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Genres</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {genreList.length ? genreList.map((genre) => <span class="rounded-md border border-pink-300/15 bg-pink-300/[0.07] px-2.5 py-1 text-xs font-semibold text-pink-100/80">{genre}</span>) : <span class="text-sm text-zinc-500">Not listed</span>}
+            </div>
           </div>
         </div>
       </div>
-    </main>
+
+      <div class="border-t border-white/10 bg-white/[0.025] p-6 sm:p-8">
+        <div class="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-pink-300/80">Archive record</p>
+            <h2 class="mt-1 text-2xl font-extrabold tracking-[-0.03em] text-white">Game information</h2>
+          </div>
+          <span class="hidden text-xs text-zinc-500 sm:block">ID: {game.id}</span>
+        </div>
+        <dl class="grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="min-w-0 bg-[#151722] p-4"><dt class="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-zinc-500">Title</dt><dd class="mt-1 text-sm leading-[1.45] text-zinc-200">{game.title}</dd></div>
+          <div class="min-w-0 bg-[#151722] p-4"><dt class="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-zinc-500">Record ID</dt><dd class="mt-1 text-sm leading-[1.45] text-zinc-200">{game.id}</dd></div>
+          <div class="min-w-0 bg-[#151722] p-4 sm:col-span-2"><dt class="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-zinc-500">Download size</dt><dd class="mt-1 text-sm leading-[1.45] text-zinc-200">{downloadSize}</dd></div>
+        </dl>
+      </div>
+    </section>
+  </main>
     <Footer />
 </body>
 </html>
+
+<script>
+  const carousel = document.querySelector('[data-carousel]');
+  let slides = carousel ? [...carousel.querySelectorAll('.carousel-slide')] : [];
+  const thumbs = [...document.querySelectorAll<HTMLButtonElement>('[data-slide-to]')];
+  const counter = document.querySelector('[data-slide-count]');
+  let activeIndex = 0;
+  let timer: number | undefined;
+
+  const removeBrokenImage = (event: Event) => {
+    const image = event.currentTarget as HTMLImageElement;
+    image.closest('.carousel-thumb')?.remove();
+    image.closest('.carousel-slide')?.remove();
+    slides = carousel ? [...carousel.querySelectorAll('.carousel-slide')] : [];
+    if (activeIndex >= slides.length) activeIndex = 0;
+    showSlide(activeIndex);
+  };
+
+  document.querySelectorAll<HTMLImageElement>('[data-carousel] img, [data-carousel-thumbs] img').forEach((image) => {
+    image.addEventListener('error', removeBrokenImage);
+    if (image.complete && image.naturalWidth === 0) removeBrokenImage({ currentTarget: image } as unknown as Event);
+  });
+
+  const showSlide = (nextIndex: number) => {
+    if (!slides.length) return;
+    activeIndex = (nextIndex + slides.length) % slides.length;
+    slides.forEach((slide, index) => {
+      slide.classList.toggle('opacity-100', index === activeIndex);
+      slide.classList.toggle('opacity-0', index !== activeIndex);
+    });
+    thumbs.forEach((thumb, index) => {
+      thumb.classList.toggle('border-pink-400/80', index === activeIndex);
+      thumb.classList.toggle('opacity-100', index === activeIndex);
+      thumb.classList.toggle('opacity-50', index !== activeIndex);
+    });
+    if (counter) counter.textContent = `${activeIndex + 1} / ${slides.length}`;
+  };
+
+  const restartTimer = () => {
+    window.clearInterval(timer);
+    if (slides.length > 1) timer = window.setInterval(() => showSlide(activeIndex + 1), 4500);
+  };
+
+  document.querySelector('[data-carousel-prev]')?.addEventListener('click', () => { showSlide(activeIndex - 1); restartTimer(); });
+  document.querySelector('[data-carousel-next]')?.addEventListener('click', () => { showSlide(activeIndex + 1); restartTimer(); });
+  thumbs.forEach((thumb) => thumb.addEventListener('click', () => { showSlide(Number(thumb.dataset.slideTo)); restartTimer(); }));
+  restartTimer();
+</script>

@@ -11,7 +11,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const games = async () => {
-  const { data, error } = await supabase.from("data_file_download").select("*");
+  const { data, error } = await supabase.from("Game").select("*");
   if (error) {
     console.error("Error fetching popular games:", error);
     return [];
@@ -19,14 +19,15 @@ const games = async () => {
   return data;
 };
 
+
 const gameList = (await games()) ?? [];
 const fallbackGames = [
-  { id: 1, name: "Lewd Avatar Simulator 3D", image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80", genre: "3D, Android, Chinese, English" },
-  { id: 2, name: "Nine Lives of Yoki", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Action" },
-  { id: 3, name: "Daisy Mae Happy Animal Farm", image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Cute" },
-  { id: 4, name: "Mansion Days", image: "https://images.unsplash.com/photo-1587654780291-39c8e7a6fdd2?auto=format&fit=crop&w=900&q=80", genre: "Android, Chinese, English, Games" },
-  { id: 5, name: "Love Android Workshop", image: "https://images.unsplash.com/photo-1508385082359-f38ae991e8f2?auto=format&fit=crop&w=900&q=80", genre: "Android, English, Visual Novel" },
-  { id: 6, name: "Dreamy Girls", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80", genre: "Simulation, Romance, 3D" }
+  { id: 1, title: "Lewd Avatar Simulator 3D", thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80", genre: "3D, Android, Chinese, English" },
+  { id: 2, title: "Nine Lives of Yoki", thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Action" },
+  { id: 3, title: "Daisy Mae Happy Animal Farm", thumbnail: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Cute" },
+  { id: 4, title: "Mansion Days", thumbnail: "https://images.unsplash.com/photo-1587654780291-39c8e7a6fdd2?auto=format&fit=crop&w=900&q=80", genre: "Android, Chinese, English, Games" },
+  { id: 5, title: "Love Android Workshop", thumbnail: "https://images.unsplash.com/photo-1508385082359-f38ae991e8f2?auto=format&fit=crop&w=900&q=80", genre: "Android, English, Visual Novel" },
+  { id: 6, title: "Dreamy Girls", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80", genre: "Simulation, Romance, 3D" }
 ];
 const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fallbackGames;
 ---
@@ -38,6 +39,7 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="{Astro.generator}" />
     <title>MegumiTL</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" size="any" />
 </head>
 <body class="m-0 min-h-screen text-[#f4f4f5] bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] bg-[#08090d]">
     <Navbar client:load />
