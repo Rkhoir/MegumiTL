@@ -20,12 +20,18 @@ importers:
       astro:
         specifier: ^7.2.4
         version: 7.2.4(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@netlify/blobs@11.0.2(supports-color@10.2.2))(@types/node@26.4.0)(jiti@1.21.7)(yaml@2.9.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       react:
         specifier: ^19.2.8
         version: 19.2.8
       react-dom:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
       zustand:
         specifier: ^5.0.15
         version: 5.0.15(@types/react@19.2.17)(react@19.2.8)
@@ -5165,6 +5171,9 @@ packages:
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
+
+  tailwind-merge@3.6.0:
+    resolution: {integrity: sha512-uxL7qAVQriqRQPAyK3pj66VqskWqoZ37PW94jwOTwNfq/z9oyu1V+eqrZqtR2+fCiXdYOZe/Modt8GtvqNzu+w==}
 
   tailwindcss@3.4.19:
     resolution: {integrity: sha512-3ofp+LL8E+pK/JuPLPggVAIaEuhvIz4qNcf3nA1Xn2o/7fb7s/TYpHhwGDv1ZU3PkBluUVaF8PyCHcm48cKLWQ==}
@@ -11847,6 +11856,8 @@ snapshots:
       sax: 1.6.1
 
   tagged-tag@1.0.0: {}
+
+  tailwind-merge@3.6.0: {}
 
   tailwindcss@3.4.19(yaml@2.9.0):
     dependencies:
