@@ -52,7 +52,7 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
         id="preloader" 
         class="fixed inset-0 z-[9998] flex items-center justify-center bg-[#08090d] transition-opacity duration-400 ease-in-out"
     >
-        <Wave client:load className="[--duration:1s] [--delay:120ms] h-20 gap-1.5 w-40 block mx-auto" />
+        <Wave client:load />
     </div>
 
     <div id="main-content" class="invisible">

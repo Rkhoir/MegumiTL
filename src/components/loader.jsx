@@ -11,7 +11,7 @@ function Wave({ className, ...props }) {
       `}</style>
       <span
         role="status"
-        className={`inline-flex items-center gap-[2.5%] text-pink-800 ${className || ""}`}
+        className="inline-flex items-center gap-[2.5%] text-pink-800 [--duration:1s] [--delay:120ms] h-28 w-56 shrink-0 justify-center"
         {...props}
       >
         {WAVE_BAR_HEIGHTS.map((height, index) => (

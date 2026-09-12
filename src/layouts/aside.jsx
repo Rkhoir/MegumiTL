@@ -20,7 +20,7 @@ export default function Aside(props) {
     ];
 
     return (
-        <aside class="pt-[18px] sticky top-5 w-full min-w-0 max-w-[300px] justify-self-end max-[980px]:order-[-1] max-[980px]:static max-[980px]:max-w-none sm:w-full">
+        <aside class="pt-[18px] sticky top-5 w-full min-w-0 max-w-[300px] justify-self-end max-[980px]:order-last max-[980px]:static max-[980px]:max-w-none sm:w-full">
             <h3 class="mt-0 mb-[18px] text-[1.1rem] font-extrabold text-white/90 tracking-[0.14em] uppercase text-left">Categories</h3>
             <div class="flex flex-col gap-3 w-full">
                 {categories.map((category, index) => (
