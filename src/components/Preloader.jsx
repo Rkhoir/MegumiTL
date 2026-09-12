@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-const MIN_DISPLAY_TIME = 1500;
+const MIN_DISPLAY_TIME_FIRST_VISIT = 1500;
+const MIN_DISPLAY_TIME_RETURNING = 200;
+const SESSION_KEY = "hasSeenPreloader";
 const WAVE_BAR_HEIGHTS = ["50%", "75%", "100%", "75%", "50%"];
 
 function Wave({ className, ...props }) {
@@ -65,6 +67,11 @@ export default function AppLoader() {
   const [removed, setRemoved] = useState(false);
   const startTime = useRef(Date.now());
 
+  // Cek sekali di awal: apakah ini kunjungan pertama di sesi ini
+  const isFirstVisit = useRef(
+    typeof window !== "undefined" && !sessionStorage.getItem(SESSION_KEY)
+  );
+
   useEffect(() => {
     function updateProgress() {
       const resources = performance.getEntriesByType("resource");
@@ -85,12 +92,19 @@ export default function AppLoader() {
       observer.disconnect();
       setProgress(100);
 
+      const minTime = isFirstVisit.current
+        ? MIN_DISPLAY_TIME_FIRST_VISIT
+        : MIN_DISPLAY_TIME_RETURNING;
+
       const elapsed = Date.now() - startTime.current;
-      const remaining = Math.max(MIN_DISPLAY_TIME - elapsed, 0);
+      const remaining = Math.max(minTime - elapsed, 0);
 
       setTimeout(() => {
         setFadeOut(true);
         document.getElementById("main-content")?.classList.remove("invisible");
+
+        // Tandai udah pernah liat preloader di sesi ini
+        sessionStorage.setItem(SESSION_KEY, "true");
 
         setTimeout(() => {
           setRemoved(true);
@@ -116,7 +130,7 @@ export default function AppLoader() {
   return (
     <>
       <LoadingBar progress={progress} fadeOut={fadeOut} />
-      <LoaderOverlay fadeOut={fadeOut} />
+      {isFirstVisit.current && <LoaderOverlay fadeOut={fadeOut} />}
     </>
   );
 }
