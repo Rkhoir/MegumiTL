@@ -5,7 +5,7 @@ import Main from "../layouts/main.jsx";
 import { createClient } from "@supabase/supabase-js";
 import Aside from "../layouts/aside.jsx";   
 import Footer from "../layouts/footer.jsx";
-import { Wave } from "../components/loader.jsx";
+import AppLoader from "../components/Preloader.jsx";
 
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
@@ -43,17 +43,7 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
 </head>
 <body class="m-0 min-h-screen text-[#f4f4f5] bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] bg-[#08090d]">
     
-    <div 
-        id="page-loading-bar" 
-        class="fixed top-0 left-0 h-[3px] w-0 bg-pink-800 z-[9999] transition-[width,opacity] duration-200 ease-in-out"
-    ></div>
-
-    <div 
-        id="preloader" 
-        class="fixed inset-0 z-[9998] flex items-center justify-center bg-[#08090d] transition-opacity duration-400 ease-in-out"
-    >
-        <Wave client:load />
-    </div>
+    <AppLoader client:load />
 
     <div id="main-content" class="invisible">
         <Navbar client:load />
@@ -75,51 +65,5 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
         </div>
         <Footer />
     </div>
-
-    <script>
-        const bar = document.getElementById('page-loading-bar');
-        const preloader = document.getElementById('preloader');
-        const mainContent = document.getElementById('main-content');
-
-        const MIN_DISPLAY_TIME = 1500; // minimal tampil 1.5 detik
-        const startTime = Date.now();
-
-        function updateProgress() {
-            const resources = performance.getEntriesByType('resource');
-            const total = resources.length;
-            const loaded = resources.filter((r) => r.responseEnd > 0).length;
-
-            if (total === 0) return;
-
-            const percent = Math.min((loaded / total) * 100, 100);
-            bar.style.width = percent + '%';
-        }
-
-        const observer = new PerformanceObserver(() => {
-            updateProgress();
-        });
-        observer.observe({ type: 'resource', buffered: true });
-
-        const interval = setInterval(updateProgress, 100);
-
-        window.addEventListener('load', () => {
-            clearInterval(interval);
-            observer.disconnect();
-            bar.style.width = '100%';
-
-            const elapsed = Date.now() - startTime;
-            const remaining = Math.max(MIN_DISPLAY_TIME - elapsed, 0);
-
-            setTimeout(() => {
-                bar?.classList.add('opacity-0');
-                preloader?.classList.add('opacity-0');
-                mainContent?.classList.remove('invisible');
-
-                setTimeout(() => {
-                    preloader?.remove();
-                }, 400);
-            }, remaining);
-        });
-    </script>
 </body>
 </html>

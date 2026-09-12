@@ -5,6 +5,7 @@ import '../../../main.css';
 import { createClient } from "@supabase/supabase-js";
 import Navbar from "../../layouts/navbar.jsx";
 import Footer from "../../layouts/footer.jsx";
+import AppLoader from "../../components/Preloader.jsx";
 
 export async function getStaticPaths() {
   const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
@@ -81,7 +82,8 @@ const downloadSize = game.size_for_android || game.size_for_windows || "Not list
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
 </head>
 <body class="m-0 flex min-h-screen flex-col justify-between bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] text-[#f4f4f5]">
-    <Navbar client:load />
+  <AppLoader client:load />
+  <Navbar client:load />
   <main class="mx-auto w-full max-w-[1220px] px-4 py-8 sm:px-6 sm:py-12">
     <a href="/home" class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-pink-300">
       <span aria-hidden="true">&#8592;</span> Back to games
