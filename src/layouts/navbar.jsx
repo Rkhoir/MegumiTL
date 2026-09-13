@@ -1,5 +1,5 @@
 ﻿import { useState } from "react";
-import SearchBar from "../components/searchBar.jsx";
+import SearchBar from "../components/SearchBar.jsx";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
