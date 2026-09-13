@@ -1,0 +1,38 @@
+{"message":"This project contains server-rendered routes, but no adapter is installed. This is fine for development, but an adapter will be required to build your site for production.","label":"config","level":"warn"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Generated 1ms","label":"types","level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Re-optimizing dependencies because vite config has changed","label":"vite","level":"info"}
+{"message":" astro  v7.2.4 ready in 5632 ms\n┃ Local    http://localhost:4321/\n┃ Network  use --host to expose","label":"SKIP_FORMAT","level":"info"}
+{"message":"watching for file changes...","label":null,"level":"info"}
+Invalid DOM property `class`. Did you mean `className`?
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Main`. See https://react.dev/link/warning-keys for more information.
+{"message":"[200] /home 1834ms","label":null,"level":"info"}
+{"message":"[200] /api/search 1791ms","label":null,"level":"info"}
+{"message":"/main.css","label":"watch","level":"info"}
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Main`. See https://react.dev/link/warning-keys for more information.
+{"message":"[200] /home 955ms","label":null,"level":"info"}
+{"message":"[200] /api/search 456ms","label":null,"level":"info"}
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Main`. See https://react.dev/link/warning-keys for more information.
+{"message":"[200] /home 493ms","label":null,"level":"info"}
+{"message":"[200] /api/search 361ms","label":null,"level":"info"}
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Main`. See https://react.dev/link/warning-keys for more information.
+{"message":"[200] /home 3373ms","label":null,"level":"info"}
+{"message":"[Unhandled error] Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <AppLoader>\n    <LoadingBar>\n    <LoaderOverlay fadeOut={false}>\n+     <div\n+       className=\"fixed inset-0 z-[9998] flex items-center justify-center bg-[#08090d] transition-opacity duration-40...\"\n+     >\n\n > throwOnHydrationMismatch node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:5238:10\n > beginWork node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:12027:16\n > runWithFiberInDEV node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:871:29\n > performUnitOfWork node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:21\n > workLoopConcurrentByScheduler node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17635:8\n > renderRootConcurrent node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17617:14\n > performWorkOnRoot node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16503:10\n > performWorkOnRootViaSchedulerTask node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:18957:6\n > MessagePort.performWorkUntilDeadline node_modules/.pnpm/scheduler@0.27.0/node_modules/scheduler/cjs/scheduler.development.js:45:47\n","label":"vite","level":"error"}
+{"message":"[200] /api/search 495ms","label":null,"level":"info"}
+{"message":"[200] /api/search 482ms","label":null,"level":"info"}
+{"message":"[200] /api/search 225ms","label":null,"level":"info"}
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Main`. See https://react.dev/link/warning-keys for more information.
+{"message":"[200] /home 997ms","label":null,"level":"info"}
+{"message":"[Unhandled error] Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\nhttps://react.dev/link/hydration-mismatch\n\n  <AppLoader>\n    <LoadingBar>\n    <LoaderOverlay fadeOut={false}>\n+     <div\n+       className=\"fixed inset-0 z-[9998] flex items-center justify-center bg-[#08090d] transition-opacity duration-40...\"\n+     >\n\n > throwOnHydrationMismatch node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:5238:10\n > beginWork node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:12027:16\n > runWithFiberInDEV node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:871:29\n > performUnitOfWork node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:21\n > workLoopConcurrentByScheduler node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17635:8\n > renderRootConcurrent node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17617:14\n > performWorkOnRoot node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16503:10\n > performWorkOnRootViaSchedulerTask node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:18957:6\n > MessagePort.performWorkUntilDeadline node_modules/.pnpm/scheduler@0.27.0/node_modules/scheduler/cjs/scheduler.development.js:45:47\n","label":"vite","level":"error"}
+{"message":"[200] /api/search 353ms","label":null,"level":"info"}

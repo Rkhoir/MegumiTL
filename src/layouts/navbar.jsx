@@ -1,4 +1,5 @@
 ﻿import { useState } from "react";
+import SearchBar from "../components/searchBar.jsx";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,35 +19,19 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-[4.5rem] items-center justify-between gap-4">
           
-          {/* Logo & Brand (Hitam & Teks Pink) */}
+          {/* Logo & Brand */}
           <a href="/home" className="flex items-center gap-3 shrink-0 group" aria-label="Android Archives home">
             <img 
               src="/logo.webp" 
               alt="Android Archives" 
               className="h-16 w-auto object-contain transition-transform group-hover:scale-105" 
             />
-            
           </a>
 
           {/* Search Bar (Desktop) */}
-          <div className="hidden md:flex flex-1 max-w-md mx-4" role="search">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Type here..."
-                aria-label="Search games"
-                className="w-full rounded-full border border-white/10 bg-white/[0.06] py-2.5 pl-4 pr-24 text-sm text-zinc-100 placeholder-zinc-500 transition-all focus:border-pink-400 focus:outline-none"
-              />
-              <button
-                type="button"
-                className="absolute bottom-1 right-1 top-1 rounded-full bg-pink-500 px-4 text-xs font-semibold text-white transition-colors hover:bg-pink-400"
-              >
-                Search
-              </button>
-            </div>
-          </div>
+          <SearchBar variant="desktop" className="hidden md:flex flex-1 max-w-md mx-4" />
 
-          {/* Navigasi Desktop (Teks Pink Active & Hover) */}
+          {/* Navigasi Desktop */}
           <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link) => (
               <a
@@ -82,22 +67,7 @@ export default function Navbar() {
         </div>
 
         {/* Search Bar Mobile */}
-        <div className="md:hidden pb-3 pt-1" role="search">
-          <div className="relative w-full">
-            <input
-              type="text"
-              placeholder="Type here..."
-              aria-label="Search games"
-              className="w-full bg-zinc-900 text-zinc-100 placeholder-zinc-500 text-sm rounded-lg pl-4 pr-20 py-2 border border-zinc-800 focus:outline-none focus:border-pink-500"
-            />
-            <button
-              type="button"
-              className="absolute right-1 top-1 bottom-1 px-3 bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold rounded-md"
-            >
-              Search
-            </button>
-          </div>
-        </div>
+        <SearchBar variant="mobile" className="md:hidden pb-3 pt-1" />
       </div>
 
       {/* Navigasi Mobile (Dropdown) */}
