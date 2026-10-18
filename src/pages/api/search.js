@@ -14,11 +14,9 @@ export async function GET({ url }) {
     });
   }
 
-  const { data, error } = await supabase
-    .from("Game")
-    .select("*")
-    .ilike("title", `%${query}%`)
-    .limit(10);
+  const { data, error } = await supabase.rpc("search_games", {
+    search_query: query,
+  });
 
   if (error) {
     console.error("Search error:", error);

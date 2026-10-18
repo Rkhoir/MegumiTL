@@ -60,7 +60,7 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
                     </div>
                     <Main games={displayGames} />
                 </div>
-                <Aside />
+                <Aside client:load/>
             </div>
         </div>
         <Footer />

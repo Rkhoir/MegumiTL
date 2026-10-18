@@ -1,14 +1,13 @@
 ﻿import { useState } from "react";
 import SearchBar from "../components/SearchBar.jsx";
+import Link from "../components/Link.jsx";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
     { name: "Games", href: "/home", active: true },
-    { name: "Android", href: "/android" },
-    { name: "Windows", href: "/windows" },
-    { name: "Advance Search", href: "/advanced" },
+    { name: "Advanced Search", href: "/advanced" },
     { name: "Request Games", href: "/request" },
     { name: "Report Dead Link", href: "/report" },
     { name: "FAQs", href: "/faq" },
@@ -34,17 +33,11 @@ export default function Navbar() {
           {/* Navigasi Desktop */}
           <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              <Link name={link.name} href={link.href} active={link.active} className="navbar" interactiveLink={
                   link.active
                     ? "border border-pink-400/25 bg-pink-400/10 text-pink-300"
                     : "text-zinc-300 hover:bg-white/[0.06] hover:text-pink-300"
-                }`}
-              >
-                {link.name}
-              </a>
+                }/>
             ))}
           </nav>
 
@@ -74,17 +67,12 @@ export default function Navbar() {
       {isOpen && (
         <nav className="lg:hidden bg-black border-b border-zinc-800 px-4 pt-2 pb-4 space-y-1" aria-label="Mobile navigation">
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
-                link.active
+
+            
+
+            <Link name={link.name} href={link.href} className="block px-3 py-2 rounded-md text-base font-medium" interactiveLink={link.active
                   ? "bg-pink-500/15 text-pink-400 border-l-4 border-pink-500"
-                  : "text-zinc-300 hover:text-pink-400 hover:bg-zinc-900"
-              }`}
-            >
-              {link.name}
-            </a>
+                  : "text-zinc-300 hover:text-pink-400 hover:bg-zinc-900"}/>
           ))}
         </nav>
       )}
