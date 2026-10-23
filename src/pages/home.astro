@@ -12,7 +12,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const games = async () => {
-  const { data, error } = await supabase.from("Game").select("*");
+  const pageSize = 20 
+  const page = 1
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1;
+  const { data, error } = await supabase.from("Game")
+  .select("id,title,thumbnail,genre", { count: "exact"})
+  .order("id",{ascending: true})
+  .range(from,to);
   if (error) {
     console.error("Error fetching popular games:", error);
     return [];
@@ -20,16 +27,7 @@ const games = async () => {
   return data;
 };
 
-const gameList = (await games()) ?? [];
-const fallbackGames = [
-  { id: 1, title: "Lewd Avatar Simulator 3D", thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80", genre: "3D, Android, Chinese, English" },
-  { id: 2, title: "Nine Lives of Yoki", thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Action" },
-  { id: 3, title: "Daisy Mae Happy Animal Farm", thumbnail: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=900&q=80", genre: "Adventure, Android, English, Cute" },
-  { id: 4, title: "Mansion Days", thumbnail: "https://images.unsplash.com/photo-1587654780291-39c8e7a6fdd2?auto=format&fit=crop&w=900&q=80", genre: "Android, Chinese, English, Games" },
-  { id: 5, title: "Love Android Workshop", thumbnail: "https://images.unsplash.com/photo-1508385082359-f38ae991e8f2?auto=format&fit=crop&w=900&q=80", genre: "Android, English, Visual Novel" },
-  { id: 6, title: "Dreamy Girls", thumbnail: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80", genre: "Simulation, Romance, 3D" }
-];
-const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fallbackGames;
+  const gameList = await games();
 ---
 
 <!DOCTYPE html>
@@ -56,9 +54,9 @@ const displayGames = Array.isArray(gameList) && gameList.length ? gameList : fal
                         <p class="mb-2 text-xs font-bold uppercase tracking-[0.24em] text-pink-300/80">The archive</p>
                         <h2 class="m-0 text-[clamp(2.4rem,2.8vw,4rem)] font-extrabold leading-[0.95] tracking-[-0.06em] text-[#f5f5f5]">Newest Games</h2>
                       </div>
-                      <span class="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-zinc-400 sm:inline-flex">{displayGames.length} titles</span>
+                      <span class="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-zinc-400 sm:inline-flex">{gameList.length} titles</span>
                     </div>
-                    <Main games={displayGames} />
+                    <Main gameList={gameList} />
                 </div>
                 <Aside client:load/>
             </div>
