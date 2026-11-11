@@ -68,7 +68,6 @@ const genreList = parseList(game.genre);
 const imageList = [...new Set([thumbnail, ...parseList(game.images)])];
 const androidLink = game.link_for_android;
 const windowsLink = game.link_for_windows;
-const downloadLink = androidLink || windowsLink;
 const downloadSize = game.size_for_android || game.size_for_windows || "Not listed";
 
 ---
@@ -84,75 +83,96 @@ const downloadSize = game.size_for_android || game.size_for_windows || "Not list
 <body class="m-0 flex min-h-screen flex-col justify-between bg-[image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:42px_42px] text-[#f4f4f5]">
   <AppLoader client:load />
   <Navbar client:load />
-  <main class="mx-auto w-full max-w-[1220px] px-4 py-8 sm:px-6 sm:py-12">
-    <a href="/home" class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-pink-300">
-      <span aria-hidden="true">&#8592;</span> Back to games
-    </a>
+  <main class="mx-auto w-full max-w-[1220px] px-4 py-6 sm:px-6 sm:py-10">
+    <nav aria-label="Breadcrumb" class="mb-5 sm:mb-6">
+      <ol class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+        <li><a href="/home" class="font-semibold text-zinc-500 transition-colors hover:text-pink-300">Games</a></li>
+        <li aria-hidden="true" class="text-zinc-700">/</li>
+        <li aria-current="page" class="max-w-[min(70vw,32rem)] truncate font-semibold text-zinc-300">{game.title}</li>
+      </ol>
+    </nav>
 
-    <section class="overflow-hidden rounded-[26px] border border-white/10 bg-[#101119] shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
-      <div class="grid lg:grid-cols-[minmax(0,1.3fr)_minmax(340px,0.7fr)]">
-        <div class="border-b border-white/10 p-3 sm:p-5 lg:border-b-0 lg:border-r">
-          <div class="relative aspect-[16/10] overflow-hidden rounded-[19px] bg-zinc-900" data-carousel>
+    <section>
+      <div>
+        <div class="min-w-0">
+          <div class="relative aspect-[16/10] overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/10 sm:aspect-[16/9] lg:aspect-[16/10]" data-carousel>
             {imageList.map((image, index) => (
-              <img src={image} alt={`${game.title} screenshot ${index + 1}`} class:list={["carousel-slide absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700", { "opacity-100": index === 0 }]} loading={index === 0 ? "eager" : "lazy"} />
+              <img src={image} alt={`${game.title} screenshot ${index + 1}`} data-slide-id={index} class:list={["carousel-slide absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700", { "opacity-100": index === 0 }]} loading={index === 0 ? "eager" : "lazy"} />
             ))}
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent"></div>
-            <div class="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4">
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 sm:bottom-6 sm:left-6 sm:right-6">
               <div>
-                <p class="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.24em] text-pink-300">Game details</p>
-                <h1 class="max-w-2xl text-3xl font-extrabold leading-tight tracking-[-0.04em] text-white sm:text-5xl">{game.title}</h1>
+                <p class="mb-1.5 text-[0.6rem] font-bold uppercase tracking-[0.24em] text-pink-300 sm:mb-2 sm:text-[0.68rem]">Game details</p>
+                <h1 class="max-w-2xl text-2xl font-extrabold leading-tight tracking-[-0.045em] text-white drop-shadow sm:text-5xl">{game.title}</h1>
               </div>
-              <span class="shrink-0 rounded-full border border-white/15 bg-black/35 px-3 py-1.5 text-xs font-semibold text-zinc-200 backdrop-blur" data-slide-count>1 / {imageList.length}</span>
+              <span class="shrink-0 rounded-full border border-white/15 bg-black/50 px-2.5 py-1.5 text-[0.65rem] font-bold tabular-nums text-zinc-100 shadow-lg backdrop-blur sm:px-3 sm:text-xs" data-slide-count>1 / {imageList.length}</span>
             </div>
-            {imageList.length > 1 && (
-              <div class="absolute left-5 right-5 top-5 flex justify-between">
-                <button type="button" class="grid h-9 w-9 place-items-center rounded-[10px] border border-white/20 bg-black/50 text-white backdrop-blur transition hover:border-pink-400/70 hover:bg-pink-600/60" data-carousel-prev aria-label="Previous image">&#8592;</button>
-                <button type="button" class="grid h-9 w-9 place-items-center rounded-[10px] border border-white/20 bg-black/50 text-white backdrop-blur transition hover:border-pink-400/70 hover:bg-pink-600/60" data-carousel-next aria-label="Next image">&#8594;</button>
-              </div>
-            )}
           </div>
           {imageList.length > 1 && (
-            <div class="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-6" data-carousel-thumbs>
+            <div class="flex min-h-10 items-center justify-center gap-2 md:hidden" data-carousel-dots aria-label="Choose screenshot">
+              {imageList.map((_, index) => (
+                <button type="button" class:list={["h-2 w-2 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#101119]", { "scale-125 bg-pink-300": index === 0, "bg-white/30 hover:bg-white/60": index !== 0 }]} data-slide-id={index} data-slide-to={index} data-carousel-dot aria-label={`Show image ${index + 1}`} aria-current={index === 0 ? "true" : undefined}>
+                </button>
+              ))}
+            </div>
+          )}
+          {imageList.length > 1 && (
+            <div class="hidden min-h-[70px] items-center gap-2 overflow-x-auto px-4 py-2 md:flex" data-carousel-thumbs aria-label="Upcoming screenshots">
               {imageList.map((image, index) => (
-                <button type="button" class:list={["carousel-thumb aspect-[16/10] overflow-hidden rounded-[10px] border border-white/10 opacity-50 transition hover:border-pink-400/80 hover:opacity-100", { "border-pink-400/80 opacity-100": index === 0 }]} data-slide-to={index} aria-label={`Show image ${index + 1}`}>
-                  <img src={image} alt="" loading="lazy" />
+                <button type="button" class="group relative h-[54px] w-[86px] shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/30 transition hover:border-pink-300/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-300" data-slide-id={index} data-slide-to={index} data-carousel-thumb aria-label={`Preview image ${index + 1}`}>
+                  <img src={image} alt="" class="h-full w-full object-cover opacity-70 transition group-hover:scale-105 group-hover:opacity-100" loading="lazy" />
                 </button>
               ))}
             </div>
           )}
         </div>
-
-        <div class="flex flex-col justify-between p-6 sm:p-8">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Game download</p>
-            <div class="mt-4 grid gap-3">
-              <a href={downloadLink || undefined} target="_blank" rel="noopener noreferrer" class:list={["flex items-center justify-between gap-4 rounded-[14px] border border-pink-400/40 bg-pink-500/15 px-4 py-4 text-white transition hover:-translate-y-0.5 hover:border-pink-400/70 hover:bg-pink-500/25", { "pointer-events-none cursor-not-allowed opacity-45": !downloadLink }]} aria-disabled={!downloadLink}>
-                <span><strong class="block">Download</strong><small class="mt-1 block text-xs text-zinc-400">{downloadSize}</small></span><span aria-hidden="true">&#8599;</span>
-              </a>
-            </div>
-          </div>
-          <div class="mt-8 border-t border-white/10 pt-6">
-            <p class="text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Genres</p>
-            <div class="mt-3 flex flex-wrap gap-2">
-              {genreList.length ? genreList.map((genre) => <span class="rounded-md border border-pink-300/15 bg-pink-300/[0.07] px-2.5 py-1 text-xs font-semibold text-pink-100/80">{genre}</span>) : <span class="text-sm text-zinc-500">Not listed</span>}
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div class="border-t border-white/10 bg-white/[0.025] p-6 sm:p-8">
-        <div class="mb-5 flex items-end justify-between gap-4">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-[0.22em] text-pink-300/80">Archive record</p>
-            <h2 class="mt-1 text-2xl font-extrabold tracking-[-0.03em] text-white">Game information</h2>
-          </div>
-          <span class="hidden text-xs text-zinc-500 sm:block">ID: {game.id}</span>
+      <div class="py-7 sm:py-9">
+        <div class="mb-6">
+          <p class="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-pink-300/80">Archive record</p>
+          <h2 class="mt-1.5 text-xl font-extrabold tracking-[-0.035em] text-white sm:text-2xl">Game information</h2>
         </div>
-        <dl class="grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="min-w-0 bg-[#151722] p-4"><dt class="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-zinc-500">Title</dt><dd class="mt-1 text-sm leading-[1.45] text-zinc-200">{game.title}</dd></div>
-          <div class="min-w-0 bg-[#151722] p-4"><dt class="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-zinc-500">Record ID</dt><dd class="mt-1 text-sm leading-[1.45] text-zinc-200">{game.id}</dd></div>
-          <div class="min-w-0 bg-[#151722] p-4 sm:col-span-2"><dt class="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-zinc-500">Download size</dt><dd class="mt-1 text-sm leading-[1.45] text-zinc-200">{downloadSize}</dd></div>
+        <dl class="grid gap-x-10 gap-y-6 sm:grid-cols-2 sm:gap-y-7">
+          <div class="grid content-start gap-1.5">
+            <dt class="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-zinc-500">Title</dt>
+            <dd class="min-w-0 break-words text-sm font-medium leading-relaxed text-zinc-100">{game.title || "Not listed"}</dd>
+          </div>
+          <div class="grid content-start gap-1.5">
+            <dt class="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-zinc-500">Record ID</dt>
+            <dd class="min-w-0 break-words font-mono text-sm leading-relaxed text-zinc-300">{game.id ?? "Not listed"}</dd>
+          </div>
+          <div class="grid content-start gap-1.5">
+            <dt class="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-zinc-500">Download size</dt>
+            <dd class="min-w-0 break-words text-sm font-medium leading-relaxed text-zinc-100">{downloadSize}</dd>
+          </div>
+          <div class="grid content-start gap-2">
+            <dt class="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-zinc-500">Genres</dt>
+            <dd class="flex min-w-0 flex-wrap gap-2">
+              {genreList.length ? genreList.map((genre) => (
+                <span class="rounded-full bg-white/[0.06] px-3 py-1 text-xs font-medium text-zinc-300 ring-1 ring-inset ring-white/[0.08]">{genre}</span>
+              )) : <span class="text-sm text-zinc-400">Not listed</span>}
+            </dd>
+          </div>
         </dl>
+      </div>
+    </section>
+    <section aria-labelledby="download-heading" class="mt-2 border-t border-white/[0.07] pt-6 sm:pt-7">
+      <h2 id="download-heading" class="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-zinc-500">Available downloads</h2>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2">
+        {androidLink && (
+          <a href={androidLink} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between gap-4 rounded-2xl border border-pink-400/25 bg-gradient-to-br from-pink-400/[0.12] to-transparent px-5 py-4 text-white transition duration-200 hover:-translate-y-0.5 hover:border-pink-300/60 hover:from-pink-400/[0.18] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-300">
+            <span><strong class="block text-sm font-bold">Download for Android</strong><small class="mt-1 block text-xs text-zinc-400">{game.size_for_android || "Size not listed"}</small></span><span class="grid h-9 w-9 place-items-center rounded-full bg-pink-300/10 text-pink-200 transition group-hover:bg-pink-300/20 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+        {windowsLink && (
+          <a href={windowsLink} target="_blank" rel="noopener noreferrer" class="group flex items-center justify-between gap-4 rounded-2xl border border-sky-300/20 bg-gradient-to-br from-sky-300/[0.1] to-transparent px-5 py-4 text-white transition duration-200 hover:-translate-y-0.5 hover:border-sky-200/50 hover:from-sky-300/[0.16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-200">
+            <span><strong class="block text-sm font-bold">Download for Windows</strong><small class="mt-1 block text-xs text-zinc-400">{game.size_for_windows || "Size not listed"}</small></span><span class="grid h-9 w-9 place-items-center rounded-full bg-sky-300/10 text-sky-200 transition group-hover:bg-sky-300/20 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">&#8599;</span>
+          </a>
+        )}
+        {!androidLink && !windowsLink && (
+          <p class="text-sm text-zinc-400 sm:col-span-2">No download available yet.</p>
+        )}
       </div>
     </section>
   </main>
@@ -162,48 +182,78 @@ const downloadSize = game.size_for_android || game.size_for_windows || "Not list
 
 <script>
   const carousel = document.querySelector('[data-carousel]');
-  let slides = carousel ? [...carousel.querySelectorAll('.carousel-slide')] : [];
-  const thumbs = [...document.querySelectorAll<HTMLButtonElement>('[data-slide-to]')];
+  let slides = carousel ? Array.from(carousel.querySelectorAll<HTMLElement>('.carousel-slide')) : [];
   const counter = document.querySelector('[data-slide-count]');
   let activeIndex = 0;
   let timer: number | undefined;
 
-  const removeBrokenImage = (event: Event) => {
-    const image = event.currentTarget as HTMLImageElement;
-    image.closest('.carousel-thumb')?.remove();
-    image.closest('.carousel-slide')?.remove();
-    slides = carousel ? [...carousel.querySelectorAll('.carousel-slide')] : [];
-    if (activeIndex >= slides.length) activeIndex = 0;
-    showSlide(activeIndex);
-  };
+  function showSlide(nextIndex: number) {
+    if (!slides.length) {
+      if (counter) counter.textContent = '0 / 0';
+      return;
+    }
 
-  document.querySelectorAll<HTMLImageElement>('[data-carousel] img, [data-carousel-thumbs] img').forEach((image) => {
-    image.addEventListener('error', removeBrokenImage);
-    if (image.complete && image.naturalWidth === 0) removeBrokenImage({ currentTarget: image } as unknown as Event);
-  });
-
-  const showSlide = (nextIndex: number) => {
-    if (!slides.length) return;
     activeIndex = (nextIndex + slides.length) % slides.length;
     slides.forEach((slide, index) => {
       slide.classList.toggle('opacity-100', index === activeIndex);
       slide.classList.toggle('opacity-0', index !== activeIndex);
     });
-    thumbs.forEach((thumb, index) => {
-      thumb.classList.toggle('border-pink-400/80', index === activeIndex);
-      thumb.classList.toggle('opacity-100', index === activeIndex);
-      thumb.classList.toggle('opacity-50', index !== activeIndex);
+
+    document.querySelectorAll<HTMLButtonElement>('[data-carousel-dot], [data-carousel-thumb]').forEach((control) => {
+      const index = slides.findIndex((slide) => slide.dataset.slideId === control.dataset.slideId);
+      control.dataset.slideTo = String(index);
+      const isActive = index === activeIndex;
+
+      if (control.hasAttribute('data-carousel-dot')) {
+        control.classList.toggle('scale-125', isActive);
+        control.classList.toggle('bg-pink-300', isActive);
+        control.classList.toggle('bg-white/30', !isActive);
+        control.setAttribute('aria-current', isActive ? 'true' : 'false');
+      }
     });
+
+    const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-carousel-thumb]'));
+    const thumbsContainer = document.querySelector<HTMLElement>('[data-carousel-thumbs]');
+    if (thumbsContainer && slides.length > 1) {
+      thumbs
+        .filter((thumb) => Number(thumb.dataset.slideTo) !== activeIndex)
+        .sort((a, b) => {
+          const aDistance = (Number(a.dataset.slideTo) - activeIndex + slides.length) % slides.length;
+          const bDistance = (Number(b.dataset.slideTo) - activeIndex + slides.length) % slides.length;
+          return aDistance - bDistance;
+        })
+        .forEach((thumb) => thumbsContainer.append(thumb));
+    }
+
     if (counter) counter.textContent = `${activeIndex + 1} / ${slides.length}`;
-  };
+  }
+
+  function removeBrokenImage(event: Event) {
+    const image = event.currentTarget as HTMLImageElement;
+    const slideId = image.closest<HTMLElement>('.carousel-slide')?.dataset.slideId
+      ?? image.closest<HTMLElement>('[data-carousel-thumb]')?.dataset.slideId;
+    if (slideId === undefined) return;
+
+    carousel?.querySelector<HTMLElement>(`.carousel-slide[data-slide-id="${slideId}"]`)?.remove();
+    document.querySelectorAll<HTMLElement>(`[data-carousel-dot][data-slide-id="${slideId}"], [data-carousel-thumb][data-slide-id="${slideId}"]`).forEach((control) => control.remove());
+    slides = carousel ? Array.from(carousel.querySelectorAll<HTMLElement>('.carousel-slide')) : [];
+    activeIndex = Math.min(activeIndex, Math.max(slides.length - 1, 0));
+    showSlide(activeIndex);
+  }
+
+  document.querySelectorAll<HTMLImageElement>('[data-carousel] img, [data-carousel-thumbs] img').forEach((image) => {
+    image.addEventListener('error', removeBrokenImage);
+    if (image.complete && image.naturalWidth === 0) image.dispatchEvent(new Event('error'));
+  });
 
   const restartTimer = () => {
     window.clearInterval(timer);
     if (slides.length > 1) timer = window.setInterval(() => showSlide(activeIndex + 1), 4500);
   };
 
-  document.querySelector('[data-carousel-prev]')?.addEventListener('click', () => { showSlide(activeIndex - 1); restartTimer(); });
-  document.querySelector('[data-carousel-next]')?.addEventListener('click', () => { showSlide(activeIndex + 1); restartTimer(); });
-  thumbs.forEach((thumb) => thumb.addEventListener('click', () => { showSlide(Number(thumb.dataset.slideTo)); restartTimer(); }));
+  document.querySelectorAll<HTMLButtonElement>('[data-carousel-dot], [data-carousel-thumb]').forEach((control) => {
+    control.addEventListener('click', () => { showSlide(Number(control.dataset.slideTo)); restartTimer(); });
+  });
+  showSlide(0);
   restartTimer();
 </script>
